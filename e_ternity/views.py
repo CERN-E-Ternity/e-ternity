@@ -29,7 +29,7 @@ from __future__ import absolute_import, print_function
 from flask import Blueprint
 
 blueprint = Blueprint(
-    'invenio_app_ils',
+    'e_ternity',
     __name__,
     template_folder='templates',
     static_folder='static',
