@@ -22,25 +22,12 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-include .dockerignore
-include .editorconfig
-include .tx/config
-include *.rst
-include *.sh
-include *.txt
-include babel.ini
-include Dockerfile
-include LICENSE
-include pytest.ini
-prune docs/_build
-recursive-include docs *.bat
-recursive-include docs *.py
-recursive-include docs *.rst
-recursive-include docs *.txt
-recursive-include docs Makefile
-recursive-include scripts *.py
-recursive-include scripts *.sh
-recursive-include e_ternity *.html
-recursive-include e_ternity *.po *.pot *.mo
-recursive-include e_ternity *.svg
-recursive-include tests *.py
+"""e-ternity base Invenio configuration."""
+
+from __future__ import absolute_import, print_function
+
+from flask_celeryext import create_celery_app
+
+from .factory import create_app
+
+celery = create_celery_app(create_app())
