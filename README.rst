@@ -21,9 +21,9 @@
     waive the privileges and immunities granted to it by virtue of its status
     as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-============
- Invenio ILS
-============
+==========
+ E-Ternity
+==========
 
 .. image:: https://img.shields.io/travis/remileduc/e-ternity.svg
         :target: https://travis-ci.org/remileduc/e-ternity
@@ -40,7 +40,7 @@
 .. image:: https://img.shields.io/github/license/remileduc/e-ternity.svg
         :target: https://github.com/remileduc/e-ternity/blob/master/LICENSE
 
-Integrated Library System flavour of Invenio.
+E-Ternity of Invenio.
 
 *This is an experimental developer preview release.*
 

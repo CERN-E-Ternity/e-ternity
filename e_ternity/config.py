@@ -22,7 +22,7 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Default configuraiton for Integrated Library System flavour of Invenio.
+"""Default configuraiton for E-Ternity flavour of Invenio.
 
 The following is an overview of the default ILS configuration for Invenio.
 You may customize the default configuration. Please refer to

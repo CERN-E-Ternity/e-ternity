@@ -135,7 +135,7 @@ todo_include_todos = False
 html_theme = 'alabaster'
 
 html_theme_options = {
-    'description': 'Integrated Library System flavour of Invenio.',
+    'description': 'E-Ternity flavour of Invenio.',
     'github_user': 'remileduc',
     'github_repo': 'e-ternity',
     'github_button': False,
@@ -315,7 +315,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   (master_doc, 'e-ternity', u'E-Ternity Documentation',
-   author, 'e-ternity', 'Integrated Library System flavour of Invenio.',
+   author, 'e-ternity', 'E-Ternity flavour of Invenio.',
    'Miscellaneous'),
 ]
 

@@ -27,6 +27,6 @@ msgid "Invenio"
 msgstr ""
 
 #: e_ternity/config.py:69
-msgid "Integrated Library System"
+msgid "E-Ternity"
 msgstr ""
 
