@@ -218,6 +218,8 @@ APP_DEFAULT_SECURE_HEADERS['session_cookie_secure'] = False
 SIPSTORE_AGENT_JSONSCHEMA_ENABLED = False
 SIPSTORE_ARCHIVER_LOCATION_NAME = 'archive'
 SIPSTORE_ARCHIVER_METADATA_TYPES = ['invenio-json-test']
+SIPSTORE_ARCHIVER_DIRECTORY_BUILDER = \
+    'e_ternity.modules.utils.sipstore.utils.archive_directory_builder'
 
 # Archivematica
 # =============
