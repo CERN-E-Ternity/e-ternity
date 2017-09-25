@@ -1,0 +1,196 @@
+# -*- coding: utf-8 -*-
+#
+# This file is part of E-Ternity.
+# Copyright (C) 2017 CERN.
+#
+# Invenio is free software; you can redistribute it
+# and/or modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# Invenio is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Invenio; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+# MA 02111-1307, USA.
+#
+# In applying this license, CERN does not
+# waive the privileges and immunities granted to it by virtue of its status
+# as an Intergovernmental Organization or submit itself to any jurisdiction.
+
+# README
+# ======
+#
+# This docker setup will create a demo site which will be run in debug mode.
+# It authorizes you to develop code locally, and it will automatically update
+# the demo site with your changes.
+#
+# To do so, you need to have a folder named `../modules` (at the same level
+# as the `invenio` directory containing this file). This folder will be
+# in the containers in `/modules`. You can develop a module here and pip
+# install it in your web container
+# (`pip install -Ue /modules/invenio-thingy[all]`).
+#
+# Here is the folder structer you need to have before starting:
+# root/: a root folder somewhere, you can rename it as you want (dev for
+#        instance)
+# root/e-ternity: a clone of this repo. You should have the docker-compose.yml
+#                 file here
+# root/modules: a folder where you can clone the modules you want to work on
+# root/records: the location where the record's files will be stored
+# root/archive: the location where the SIP will be created
+#
+# All these folders are mounted into the container:
+# /code for /root/e-ternity
+# /modules, /records and /archive
+#
+# To start this setup, you need to run the following commands:
+# $ docker-compose build
+# $ docker-compose up [-d]
+# $ docker-compose exec -it web /code/scripts/create-instance.sh
+# Then quit and restart all containers:
+# $ docker stop $(docker ps -aq)
+#
+# Then you can access to containers with
+# $ docker exec -it eternity_web_1 bash
+
+version: "3"
+services:
+  web:
+    restart: "always"
+    build:
+      context: .
+      args:
+        DEBUG: 1
+    command: /bin/bash -c "invenio run -h 0.0.0.0"
+    environment:
+        PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        # DB
+        INVENIO_SQLALCHEMY_DATABASE_URI: "postgresql+psycopg2://eternity:dbpass123@postgresql:5432/eternity"
+        # Redis
+        INVENIO_CACHE_REDIS_HOST: "redis"
+        INVENIO_CACHE_REDIS_URL: "redis://redis:6379/0"
+        INVENIO_ACCOUNTS_SESSION_REDIS_URL: "redis://redis:6379/1"
+        # Celery
+        INVENIO_BROKER_URL: "amqp://guest:guest@rabbitmq:5672/"
+        INVENIO_CELERY_BROKER_URL: "amqp://guest:guest@rabbitmq:5672/"
+        INVENIO_CELERY_RESULT_BACKEND: "redis://redis:6379/2"
+        # Elasticsearch
+        INVENIO_SEARCH_ELASTIC_HOSTS: "elasticsearch"
+        # Archivematica
+        INVENIO_ARCHIVEMATICA_STORAGE_URL: "http://rduccesc-local-sto3.cern.ch"
+        INVENIO_ARCHIVEMATICA_STORAGE_USER: "test"
+        INVENIO_ARCHIVEMATICA_STORAGE_API_KEY: "ff7d3c44965b5719ac520b47a29414e90ee6dbcd"
+        INVENIO_ARCHIVEMATICA_DASHBOARD_URL: "http://rduccesc-local-dash3.cern.ch"
+        INVENIO_ARCHIVEMATICA_DASHBOARD_USER: "test"
+        INVENIO_ARCHIVEMATICA_DASHBOARD_API_KEY: "7b78b445ff6a816ba3507ed792995ca5405f4d3e"
+    volumes:
+      - .:/code
+      - ../archive:/archive
+      - ../modules:/modules
+      - ../records:/records
+      - static:/usr/local/var/invenio-instance
+    links:
+      - postgresql
+      - redis
+      - elasticsearch
+      - rabbitmq
+    ports:
+      - "5000:5000"
+    working_dir: "/modules"
+
+  worker:
+    build: .
+    restart: "always"
+    command: "celery worker -A e_ternity.celery --loglevel=INFO"
+    environment:
+        PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        # DB
+        INVENIO_SQLALCHEMY_DATABASE_URI: "postgresql+psycopg2://eternity:dbpass123@postgresql:5432/eternity"
+        # Redis
+        INVENIO_CACHE_REDIS_HOST: "redis"
+        INVENIO_CACHE_REDIS_URL: "redis://redis:6379/0"
+        INVENIO_ACCOUNTS_SESSION_REDIS_URL: "redis://redis:6379/1"
+        # Celery
+        INVENIO_BROKER_URL: "amqp://guest:guest@rabbitmq:5672/"
+        INVENIO_CELERY_BROKER_URL: "amqp://guest:guest@rabbitmq:5672/"
+        INVENIO_CELERY_RESULT_BACKEND: "redis://redis:6379/2"
+        # Elasticsearch
+        INVENIO_SEARCH_ELASTIC_HOSTS: "elasticsearch"
+        # Archivematica
+        INVENIO_ARCHIVEMATICA_STORAGE_URL: "http://rduccesc-local-sto3.cern.ch"
+        INVENIO_ARCHIVEMATICA_STORAGE_USER: "test"
+        INVENIO_ARCHIVEMATICA_STORAGE_API_KEY: "ff7d3c44965b5719ac520b47a29414e90ee6dbcd"
+        INVENIO_ARCHIVEMATICA_DASHBOARD_URL: "http://rduccesc-local-dash3.cern.ch"
+        INVENIO_ARCHIVEMATICA_DASHBOARD_USER: "test"
+        INVENIO_ARCHIVEMATICA_DASHBOARD_API_KEY: "7b78b445ff6a816ba3507ed792995ca5405f4d3e"
+    volumes:
+      - .:/code
+      - ../archive:/archive
+      - ../modules:/modules
+      - ../records:/records
+      - static:/usr/local/var/invenio-instance
+    links:
+      - postgresql
+      - redis
+      - elasticsearch
+      - rabbitmq
+    working_dir: "/modules"
+
+  postgresql:
+    restart: "always"
+    image: postgres
+    environment:
+      POSTGRES_USER: "eternity"
+      POSTGRES_DB: "eternity"
+      POSTGRES_PASSWORD: "dbpass123"
+    ports:
+      - "25432:5432"
+
+  redis:
+    restart: "always"
+    image: redis
+    ports:
+      - "26379:6379"
+
+  elasticsearch:
+    restart: "always"
+    build:
+      context: .
+      dockerfile: ./docker/elasticsearch/Dockerfile
+    ports:
+      - "29200:9200"
+      - "29300:9300"
+
+  rabbitmq:
+    restart: "always"
+    image: rabbitmq
+    ports:
+      - "24369:4369"
+      - "45672:25672"
+
+  nginx:
+    restart: "always"
+    build: ./docker/nginx
+    ports:
+      - "80:80"
+    volumes:
+      - static:/usr/local/var/invenio-instance
+    links:
+      - web
+
+  static:
+    restart: "no"
+    build:
+      context: .
+      args:
+        DEBUG: 1
+    volumes:
+      - static:/usr/local/var/invenio-instance
+
+volumes:
+  static:
