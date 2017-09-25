@@ -34,6 +34,7 @@ from __future__ import absolute_import, print_function
 
 from datetime import timedelta
 
+from celery.schedules import crontab
 from invenio_app.config import \
     APP_DEFAULT_SECURE_HEADERS as INVENIO_APP_APP_DEFAULT_SECURE_HEADERS
 from invenio_marc21.config import MARC21_REST_ENDPOINTS, MARC21_UI_ENDPOINTS, \
@@ -219,10 +220,11 @@ SIPSTORE_AGENT_JSONSCHEMA_ENABLED = False
 SIPSTORE_ARCHIVER_LOCATION_NAME = 'archive'
 SIPSTORE_ARCHIVER_METADATA_TYPES = ['invenio-json-test']
 SIPSTORE_ARCHIVER_DIRECTORY_BUILDER = \
-    'e_ternity.modules.utils.sipstore.utils.archive_directory_builder'
+    'e_ternity.modules.sipstore.utils.archive_directory_builder'
 
 # Archivematica
 # =============
+ARCHIVEMATICA_ORGANIZATION_NAME = 'E-Ternity'
 ARCHIVEMATICA_TRANSFER_FACTORY = 'invenio_archivematica.factories.transfer_cp'
 ARCHIVEMATICA_TRANSFER_FOLDER = {}
 # Need to be overridden with environment variables
@@ -232,3 +234,20 @@ ARCHIVEMATICA_STORAGE_API_KEY = ''
 ARCHIVEMATICA_DASHBOARD_URL = ''
 ARCHIVEMATICA_DASHBOARD_USER = ''
 ARCHIVEMATICA_DASHBOARD_API_KEY = ''
+
+# Celery Cron
+# ===========
+# archive all the new sip that haven't been modified since 15 days at 1 am
+CELERYBEAT_SCHEDULE['archive-sips'] = {
+    'task': 'invenio_archivematica.tasks.archive_new_sips',
+    'schedule': crontab(hour=1),
+    'kwargs': {
+        'accession_id_factory':
+            'e_ternity.modules.archivematica.factories.create_accession_id',
+        'days': 15,
+        'hours': 0,
+        'minutes': 0,
+        'seconds': 0,
+        'delay': True
+    }
+}

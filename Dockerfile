@@ -75,7 +75,6 @@ RUN ${INVENIO_WEB_INSTANCE} npm \
     && ${INVENIO_WEB_INSTANCE} collect -v \
     && ${INVENIO_WEB_INSTANCE} assets build
 RUN chmod -R 777 ${INVENIO_INSTANCE_PATH}
-RUN mkdir /archive && chmod -R 777 /archive
 
 # Start the Invenio application:
 CMD ["/bin/bash", "-c", "invenio run -h 0.0.0.0"]
