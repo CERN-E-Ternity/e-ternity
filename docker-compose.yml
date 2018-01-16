@@ -51,7 +51,7 @@
 # To start this setup, you need to run the following commands:
 # $ docker-compose build
 # $ docker-compose up [-d]
-# $ docker-compose exec -it web /code/scripts/create-instance.sh
+# $ docker-compose exec -it web /code/scripts/setup-instance.sh
 # Then quit and restart all containers:
 # $ docker stop $(docker ps -aq)
 #
@@ -82,12 +82,12 @@ services:
         # Elasticsearch
         INVENIO_SEARCH_ELASTIC_HOSTS: "elasticsearch"
         # Archivematica
-        INVENIO_ARCHIVEMATICA_STORAGE_URL: "http://rduccesc-local-sto3.cern.ch"
-        INVENIO_ARCHIVEMATICA_STORAGE_USER: "test"
-        INVENIO_ARCHIVEMATICA_STORAGE_API_KEY: "ff7d3c44965b5719ac520b47a29414e90ee6dbcd"
-        INVENIO_ARCHIVEMATICA_DASHBOARD_URL: "http://rduccesc-local-dash3.cern.ch"
+        INVENIO_ARCHIVEMATICA_STORAGE_URL: "http://your-archivematica-storage.cern.ch"
+        INVENIO_ARCHIVEMATICA_STORAGE_USER: "username"
+        INVENIO_ARCHIVEMATICA_STORAGE_API_KEY: ""
+        INVENIO_ARCHIVEMATICA_DASHBOARD_URL: "http://your-archivematica-dashboard.cern.ch"
         INVENIO_ARCHIVEMATICA_DASHBOARD_USER: "test"
-        INVENIO_ARCHIVEMATICA_DASHBOARD_API_KEY: "7b78b445ff6a816ba3507ed792995ca5405f4d3e"
+        INVENIO_ARCHIVEMATICA_DASHBOARD_API_KEY: ""
     volumes:
       - .:/code
       - ../archive:/archive
@@ -122,12 +122,12 @@ services:
         # Elasticsearch
         INVENIO_SEARCH_ELASTIC_HOSTS: "elasticsearch"
         # Archivematica
-        INVENIO_ARCHIVEMATICA_STORAGE_URL: "http://rduccesc-local-sto3.cern.ch"
-        INVENIO_ARCHIVEMATICA_STORAGE_USER: "test"
-        INVENIO_ARCHIVEMATICA_STORAGE_API_KEY: "ff7d3c44965b5719ac520b47a29414e90ee6dbcd"
-        INVENIO_ARCHIVEMATICA_DASHBOARD_URL: "http://rduccesc-local-dash3.cern.ch"
+        INVENIO_ARCHIVEMATICA_STORAGE_URL: "http://your-archivematica-storage.cern.ch"
+        INVENIO_ARCHIVEMATICA_STORAGE_USER: "username"
+        INVENIO_ARCHIVEMATICA_STORAGE_API_KEY: ""
+        INVENIO_ARCHIVEMATICA_DASHBOARD_URL: "http://your-archivematica-dashboard.cern.ch"
         INVENIO_ARCHIVEMATICA_DASHBOARD_USER: "test"
-        INVENIO_ARCHIVEMATICA_DASHBOARD_API_KEY: "7b78b445ff6a816ba3507ed792995ca5405f4d3e"
+        INVENIO_ARCHIVEMATICA_DASHBOARD_API_KEY: ""
     volumes:
       - .:/code
       - ../archive:/archive

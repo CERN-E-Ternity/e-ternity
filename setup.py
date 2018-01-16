@@ -39,39 +39,44 @@ tests_require = [
     'pytest-cache>=1.0',
     'pytest-cov>=2.5.1',
     'pytest-pep8>=1.0.6',
-    'pytest>=3.1.3',
+    'pytest>=3.3.1',
     'pytest-flask>=0.10.0',
-    'selenium>=3.4.3',
 ]
 
-invenio_db_version = '>=1.0.0b8,<1.1.0'
+db_version = '>=1.0.0b9'
+search_version = '>=1.0.0b4'
 
 extras_require = {
-    # Databases
-    'mysql': [
-        'invenio-db[mysql]' + invenio_db_version,
-    ],
-    'postgresql': [
-        'invenio-db[postgresql]' + invenio_db_version,
-    ],
-    # Elasticsearch versionS
-    'elasticsearch2': [
-        'elasticsearch>=2.0.0,<3.0.0',
-        'elasticsearch-dsl>=2.0.0,<3.0.0',
-    ],
-    'elasticsearch5': [
-        'elasticsearch>=5.0.0,<6.0.0',
-        'elasticsearch-dsl>=5.0.0,<6.0.0',
-    ],
     'docs': [
         'Sphinx>=1.5.1',
     ],
+    # Database version
+    'postgresql': [
+        'invenio-db[postgresql,versioning]{}'.format(db_version),
+    ],
+    'mysql': [
+        'invenio-db[mysql,versioning]{}'.format(db_version),
+    ],
+    'sqlite': [
+        'invenio-db[versioning]{}'.format(db_version),
+    ],
+    # Elasticsearch version
+    'elasticsearch2': [
+        'invenio-search[elasticsearch2]{}'.format(search_version),
+    ],
+    # 'elasticsearch5': [
+    #     'invenio-search[elasticsearch5]{}'.format(search_version),
+    # ],
+    # 'elasticsearch6': [
+    #     'invenio-search[elasticsearch5]{}'.format(search_version),
+    # ],
     'tests': tests_require,
 }
 
 extras_require['all'] = []
 for name, reqs in extras_require.items():
-    if name in ('mysql', 'postgresql', 'elasticsearch2', 'elasticsearch5'):
+    if name in ('postgresql', 'mysql', 'sqlite', 'elasticsearch2',
+                'elasticsearch5', 'elasticsearch6'):
         continue
     extras_require['all'].extend(reqs)
 
@@ -109,7 +114,6 @@ install_requires = [
     'invenio-records-ui>=1.0.0b1',
     'invenio-records>=1.0.0b3',
     'invenio-search-ui>=1.0.0a7',
-    'invenio-search>=1.0.0a10',
     # # Files bundle
     'invenio-records-files>=1.0.0a9',
     # Archive bundle
@@ -141,7 +145,7 @@ setup(
     license='GPLv2',
     author='CERN',
     author_email='info@inveniosoftware.org',
-    url='https://github.com/remileduc/e-ternity',
+    url='https://github.com/CERN-E-Ternity/e-ternity',
     packages=packages,
     zip_safe=False,
     include_package_data=True,

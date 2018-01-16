@@ -1,6 +1,6 @@
 ..
     This file is part of Invenio.
-    Copyright (C) 2017 CERN.
+    Copyright (C) 2017, 2018 CERN.
 
     Invenio is free software; you can redistribute it
     and/or modify it under the terms of the GNU General Public License as
@@ -25,24 +25,19 @@
  E-Ternity
 ==========
 
-.. image:: https://img.shields.io/travis/remileduc/e-ternity.svg
-        :target: https://travis-ci.org/remileduc/e-ternity
+.. image:: https://img.shields.io/travis/CERN-E-Ternity/e-ternity.svg
+        :target: https://travis-ci.org/CERN-E-Ternity/e-ternity
 
-.. image:: https://img.shields.io/coveralls/remileduc/e-ternity.svg
-        :target: https://coveralls.io/r/remileduc/e-ternity
+.. image:: https://img.shields.io/github/tag/CERN-E-Ternity/e-ternity.svg
+        :target: https://github.com/CERN-E-Ternity/e-ternity/releases
 
-.. image:: https://img.shields.io/github/tag/remileduc/e-ternity.svg
-        :target: https://github.com/remileduc/e-ternity/releases
-
-.. image:: https://img.shields.io/pypi/dm/e-ternity.svg
-        :target: https://pypi.python.org/pypi/e-ternity
-
-.. image:: https://img.shields.io/github/license/remileduc/e-ternity.svg
-        :target: https://github.com/remileduc/e-ternity/blob/master/LICENSE
+.. image:: https://img.shields.io/github/license/CERN-E-Ternity/e-ternity.svg
+        :target: https://github.com/CERN-E-Ternity/e-ternity/blob/master/LICENSE
 
 E-Ternity of Invenio.
 
-*This is an experimental developer preview release.*
+An Invenio installation to demonstrate how to use the Invenio-Archivematica_ module and Archivematica_ software for long
+term data preservation.
 
-Further documentation is available on
-https://e-ternity.readthedocs.io/
+.. _Invenio-Archivematica: https://invenio-archivematica.readthedocs.io/
+.. _Archivematica: https://www.archivematica.org/

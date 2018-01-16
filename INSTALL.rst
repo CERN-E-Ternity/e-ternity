@@ -18,7 +18,7 @@ Install Invenio ILS:
 
 .. code-block:: console
 
-   (ils)$ pip install e-ternity[postgresql,elasticsearch2] --process-dependency-links
+   (ils)$ pip install e-ternity[all,postgresql,elasticsearch2] --process-dependency-links
 
 Install web assets (JavaScript and CSS dependencies):
 

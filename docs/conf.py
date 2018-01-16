@@ -136,13 +136,13 @@ html_theme = 'alabaster'
 
 html_theme_options = {
     'description': 'E-Ternity flavour of Invenio.',
-    'github_user': 'remileduc',
+    'github_user': 'CERN-E-Ternity',
     'github_repo': 'e-ternity',
     'github_button': False,
     'github_banner': True,
     'show_powered_by': False,
     'extra_nav_links': {
-        'e-ternity@GitHub': 'https://github.com/remileduc/e-ternity',
+        'e-ternity@GitHub': 'https://github.com/CERN-E-Ternity/e-ternity',
         'e-ternity@PyPI': 'https://pypi.python.org/pypi/e-ternity/',
     }
 }
@@ -335,8 +335,6 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
-    # TODO: Configure external documentation references, eg:
-    # 'Flask-Admin': ('https://flask-admin.readthedocs.io/en/latest/', None),
 }
 
 # Autodoc configuraton.

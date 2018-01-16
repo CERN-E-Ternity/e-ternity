@@ -32,5 +32,5 @@ Happy hacking and thanks for flying E-Ternity.
 |   Email: info@inveniosoftware.org
 |   IRC: #invenio on irc.freenode.net
 |   Twitter: https://twitter.com/inveniosoftware
-|   GitHub: https://github.com/remileduc/e-ternity
+|   GitHub: https://github.com/CERN-E-Ternity/e-ternity
 |   URL: http://inveniosoftware.org

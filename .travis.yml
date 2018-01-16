@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2017 CERN.
+# Copyright (C) 2017, 2018 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -32,18 +32,6 @@ notifications:
     on_success: never # default: always
     on_failure: always # default: always
 
-  webhooks: # Gitter integration
-        urls:
-          - https://webhooks.gitter.im/e/f51458fa35835a48601a
-        # options: [always|never|change]
-        on_success: never    # default: always
-        on_failure: always   # default: always
-        on_start: never      # default: never
-
-        # not passing travis yaml validator, but specified in the doc
-        # on_cancel: never     # default: always
-        # on_error: always     # default: always
-
 sudo: false
 
 language: python
@@ -58,9 +46,9 @@ services:
   - redis
 
 env:
-  - REQUIREMENTS=lowest E2E="no" ES_VERSION=2.4.6
-  - REQUIREMENTS=release DEPLOY=true E2E="yes" ES_VERSION=2.4.6
-  - REQUIREMENTS=devel E2E="yes" ES_VERSION=2.4.6
+  - REQUIREMENTS=lowest ES_VERSION=2.4.6
+  - REQUIREMENTS=release DEPLOY=true ES_VERSION=2.4.6
+  - REQUIREMENTS=devel ES_VERSION=2.4.6
 
 python:
   - "2.7"
@@ -71,15 +59,12 @@ before_install:
   - wget -O - https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.tar.gz | tar xz --directory=/tmp/elasticsearch --strip-components=1
   - "/tmp/elasticsearch/bin/plugin install -b mapper-attachments"
   - "/tmp/elasticsearch/bin/elasticsearch &"
-  # Gecko webdriver: https://github.com/mozilla/geckodriver/releases/
-  - "PATH=$PATH:$HOME/webdrivers"
-  - "if [ ${E2E} == 'yes' ] && [ ! -f $HOME/webdrivers/chromedriver ]; then wget https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip -P $HOME/webdrivers; unzip -d $HOME/webdrivers $HOME/webdrivers/chromedriver_linux64.zip; fi"
   - "nvm install 6; nvm use 6"
   - "travis_retry pip install --upgrade pip setuptools py"
   - "travis_retry pip install twine wheel coveralls requirements-builder"
   - "requirements-builder -e all --level=min setup.py > .travis-lowest-requirements.txt"
   - "requirements-builder -e all --level=pypi setup.py > .travis-release-requirements.txt"
-  - "requirements-builder -e all --level=dev --req requirements-devel.txt setup.py > .travis-devel-requirements.txt"
+  - "requirements-builder -e all --level=dev --req requirements.devel.txt setup.py > .travis-devel-requirements.txt"
   - "./scripts/setup-npm.sh"
 
 install:
@@ -89,17 +74,8 @@ install:
   - "travis_retry pip install --process-dependency-links -e .[all]"
   - "./scripts/setup-assets.sh"
 
-before_script:
-  # https://docs.travis-ci.com/user/gui-and-headless-browsers/
-  - "export DISPLAY=:99.0"
-  - "export E2E_WEBDRIVER_BROWSERS='Chrome'"
-  - "if [ ${E2E} == 'yes' ]; then sh -e /etc/init.d/xvfb start; sleep 5; fi"
-
 script:
-  - ./run-tests.sh # E2E tests are skipped if E2E env is set to 'no'
-
-after_success:
-  - coveralls
+  - ./run-tests.sh
 
 deploy:
   provider: pypi
@@ -110,5 +86,5 @@ deploy:
   on:
     tags: true
     python: "2.7"
-    repo: remileduc/e-ternity
+    repo: CERN-E-Ternity/e-ternity
     condition: $DEPLOY = true

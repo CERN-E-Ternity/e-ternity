@@ -22,9 +22,19 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
+curl -XDELETE localhost:9200/*
 invenio db destroy --yes-i-know
 invenio db init create
 invenio index queue init
 invenio index init
-invenio demo init
+invenio demo init # loads demo data. don't do it if you don't want to
+# then we want to create the location to store the records, and the location to store the archive
+# for test environment, use the folder archivematica-test instead!!!
+invenio files location --default records /records/
+invenio files location archive /archive/
+# finally, create a user and give him access to the oais APIs
+invenio users create --active --password testtest test@test.com
+invenio access allow archive-read user test@test.com
+invenio access allow archive-write user test@test.com
+
 

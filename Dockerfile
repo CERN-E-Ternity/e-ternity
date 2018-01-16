@@ -65,7 +65,7 @@ RUN cat /tmp/nodesource.sh | bash - \
 
 # Create Invenio instance:
 RUN pip install -U --process-dependency-links --trusted-host github.com \
-    git+https://github.com/remileduc/e-ternity.git#egg=e-ternity[postgresql,elasticsearch2]
+    git+https://github.com/CERN-E-Ternity/e-ternity.git#egg=e-ternity
 RUN mkdir -p ${INVENIO_INSTANCE_PATH}
 WORKDIR ${INVENIO_INSTANCE_PATH}
 RUN ${INVENIO_WEB_INSTANCE} npm \
