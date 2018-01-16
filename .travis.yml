@@ -23,7 +23,9 @@
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
 addons:
-  chrome: stable # https://docs.travis-ci.com/user/chrome
+  # https://docs.travis-ci.com/user/chrome
+  #firefox: 57.0
+  chrome: stable
 
 dist: trusty # Chrome driver fails if not trusty dist
 
@@ -46,9 +48,8 @@ services:
   - redis
 
 env:
-  - REQUIREMENTS=lowest ES_VERSION=2.4.6
-  - REQUIREMENTS=release DEPLOY=true ES_VERSION=2.4.6
-  - REQUIREMENTS=devel ES_VERSION=2.4.6
+  - REQUIREMENTS=lowest E2E="no" ES_VERSION=2.4.6
+  - REQUIREMENTS=devel E2E="yes" ES_VERSION=2.4.6
 
 python:
   - "2.7"
@@ -59,11 +60,13 @@ before_install:
   - wget -O - https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.tar.gz | tar xz --directory=/tmp/elasticsearch --strip-components=1
   - "/tmp/elasticsearch/bin/plugin install -b mapper-attachments"
   - "/tmp/elasticsearch/bin/elasticsearch &"
+  - "PATH=$PATH:$HOME/webdrivers"
+  #- "if [ ${E2E} == 'yes' ] && [ ! -f $HOME/webdrivers/geckodriver ]; then wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz -P $HOME/webdrivers; tar -xvzf $HOME/webdrivers/geckodriver-v0.19.1-linux64.tar.gz; fi"
+  - "if [ ${E2E} == 'yes' ] && [ ! -f $HOME/webdrivers/chromedriver ]; then wget https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip -P $HOME/webdrivers; unzip -d $HOME/webdrivers $HOME/webdrivers/chromedriver_linux64.zip; fi"
   - "nvm install 6; nvm use 6"
   - "travis_retry pip install --upgrade pip setuptools py"
   - "travis_retry pip install twine wheel coveralls requirements-builder"
   - "requirements-builder -e all --level=min setup.py > .travis-lowest-requirements.txt"
-  - "requirements-builder -e all --level=pypi setup.py > .travis-release-requirements.txt"
   - "requirements-builder -e all --level=dev --req requirements.devel.txt setup.py > .travis-devel-requirements.txt"
   - "./scripts/setup-npm.sh"
 
@@ -71,20 +74,15 @@ install:
   # FIXME remove when there is a true version of invenio-archivematica
   - "travis_retry pip install git+https://github.com/inveniosoftware/invenio-archivematica.git#egg=invenio-archivematica"
   - "travis_retry pip install -r .travis-${REQUIREMENTS}-requirements.txt"
-  - "travis_retry pip install --process-dependency-links -e .[all]"
+  - "travis_retry pip install --process-dependency-links -e .[all,sqlite,elasticsearch2]"
   - "./scripts/setup-assets.sh"
+
+before_script:
+  # https://docs.travis-ci.com/user/gui-and-headless-browsers/
+  - "export DISPLAY=:99.0"
+  #- "export E2E_WEBDRIVER_BROWSERS='Firefox'"
+  - "export E2E_WEBDRIVER_BROWSERS='Chrome'"
+  - "if [ ${E2E} == 'yes' ]; then sh -e /etc/init.d/xvfb start; sleep 5; fi"
 
 script:
   - ./run-tests.sh
-
-deploy:
-  provider: pypi
-  user: inveniosoftware
-  password:
-    secure: "HtQx/0iqKVcIdVKLx71Llufk5qmZtpYEac9Ic9ACHj7Ns/JMRBn1lP4vshMm2cWyZfzq+w0HtDO0I5KhiugBIA2vqIqqWYgV9HurZqLUusufEWL1Te6wrG+FtZzB5e77VLL7X+1fYyfiHeRU75SFRiwB1m95ALA8ghs0fjV2YAiZYN7L4NUQ0P7lOqx62azD1iBLmH94mBE6yKP3eRPmeOUTGXb5mXe/K7rRak8vhbfarVn0U0KHgzYFomANg/vhqcqAfmm600CYxEuQrfHFQWe5WNDf6yRVdkrYwIzWOGPZM7cDabZV4LpvuA0lcD26bSIflVJ6nlJtdWY7/l1HM2gtMfDW6d0iCLeBXTziIrz7g7sbPpzYalU/AVKJ7yyiSRN1uLrzOnB6cPYFWEJWGlrPcs/astDjSMKXNivJuKnGtF8eq81NNcZfVb8MhheOpmOhh87wzqU4mDwfLat2aB0vlYrKQN7e72LwOqUL1MbPVoR1+qdh8JwzJdwNNc6OCryg/gDm667vGEaMjybAL8Qv2UA7vWpizGQyYBKuoRcvPIA8CUN3uOaqKCHrX5wdnqSK8IjPlp1bsETJ+mnOaye8jYSfZDCsdBnB71wwM7NV24SE4AAgYre8rLt7b1bAiCdZs8TlF7ulwC5RGyJnqgvE2JBeZBkBxxuBFSQX7i0="
-  distributions: "compile_catalog sdist bdist_wheel"
-  on:
-    tags: true
-    python: "2.7"
-    repo: CERN-E-Ternity/e-ternity
-    condition: $DEPLOY = true

@@ -41,6 +41,7 @@ tests_require = [
     'pytest-pep8>=1.0.6',
     'pytest>=3.3.1',
     'pytest-flask>=0.10.0',
+    'selenium>=3.4.3',
 ]
 
 db_version = '>=1.0.0b9'
